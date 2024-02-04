@@ -1,0 +1,15 @@
+/dist/
+/target/
+.env
+.env.*
+!.env.example
+_*/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+resources/css/tailwind.css
+tailwindcss/node_modules/

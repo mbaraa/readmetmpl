@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  website:
+    container_name: "readmetmpl-website"
+    build:
+      context: .
+    image: "readmetmpl"
+    restart: "always"
+    ports:
+      - "8080:8081"
+    env_file: ./.env.docker
+    stdin_open: true
+    networks:
+      - readmetmpl
+
+networks:
+  readmetmpl: {}
