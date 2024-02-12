@@ -14,6 +14,6 @@ func NewIndex() Template[IndexProps] {
 
 func (i *indexTemplate) Render(props IndexProps) io.Reader {
 	// error is ignored, because it's impossible to happen!
-	out, _ := renderTemplate("index", props)
+	out, _ := renderHtmlTemplate("index", props)
 	return out
 }

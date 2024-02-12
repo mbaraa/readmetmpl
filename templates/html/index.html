@@ -13,16 +13,200 @@
     <meta name="description" content="A Readme generator from template" />
     <meta name="keywords" content="hmm" />
     {{ template "_imports" }}
+
+    <style>
+      textarea {
+        height: 200px !important;
+      }
+    </style>
   </head>
 
   <body style="min-height: 100dvh" class="font-Vistol bg-black">
-    <main class="w-full h-full">
-      <button class="btn">Hehe hoho I'm a Button</button>
-      <button class="btn btn-info">Info</button>
-      <button class="btn btn-success">Success</button>
-      <button class="btn btn-warning">Warning</button>
-      <button class="btn btn-error">Error</button>
+    <main class="w-full h-full p-[100px]">
+      <form
+        action="#"
+        id="some-form"
+        class="mb-[10px] grid grid-cols-3 gap-[10px]"
+      >
+        <input class="input" type="text" name="title" placeholder="Title" />
+        <input
+          class="input"
+          type="text"
+          name="brief"
+          placeholder="Brief Description"
+        />
+        <input
+          class="input"
+          type="url"
+          name="docs-url"
+          placeholder="Docs Url"
+        />
+        <input
+          class="input"
+          type="url"
+          name="issues-url"
+          placeholder="Issues Url"
+        />
+        <input
+          class="input"
+          type="url"
+          name="build-badge"
+          placeholder="Build badge target url"
+        />
+        <input
+          class="input"
+          type="url"
+          name="build-status-url"
+          placeholder="Build status url"
+        />
+        <textarea class="input" rows="30" cols="70" name="description">
+Description</textarea
+        >
+        <textarea class="input" rows="30" cols="70" name="prerequisites-md">
+Prerequisites Markdown</textarea
+        >
+        <textarea class="input" rows="30" cols="70" name="installation-md">
+Installation Markdown</textarea
+        >
+        <textarea class="input" rows="30" cols="70" name="running-md">
+Running Markdown</textarea
+        >
+        <!--  -->
+        <div>
+          <label for="built-with">Built With:</label>
+          <div id="built-with">
+            <button class="btn info" id="add-built-with-btn">+</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="technologies-docs">Technologies Used:</label>
+          <div id="technologies-docs">
+            <button class="btn info" id="add-technologies-docs-btn">+</button>
+          </div>
+        </div>
+      </form>
+
+      <button id="btnn" class="btn info">Hehe hoho I'm a Button</button>
     </main>
+
+    <script>
+      const form = document.getElementById("some-form");
+      const addBuiltWithButton = document.getElementById("add-built-with-btn");
+      const addTechnologiesDocsButton = document.getElementById(
+        "add-technologies-docs-btn",
+      );
+
+      function groupArrayFromObject(object, commonKey, subKeys) {
+        const obj = {};
+
+        for (const subKey of subKeys) {
+          const values = [];
+          for (const key in object) {
+            if (
+              Array.isArray(object[key]) &&
+              key === commonKey + "-" + subKey
+            ) {
+              for (const objArrVal of object[key]) {
+                values.push(objArrVal);
+              }
+              obj[subKey] = values;
+            }
+          }
+        }
+
+        const spreadObjects = [];
+        let i = 0;
+        for (const key in obj) {
+          const o = {};
+          for (const value of obj[key]) {
+            o[key] = obj[key][i];
+          }
+          spreadObjects.push(o);
+          i++;
+        }
+
+        return obj;
+      }
+
+      document.getElementById("btnn").addEventListener("click", (e) => {
+        // juice form data into json
+        const formData = new FormData(form);
+        const reqJson = {};
+        for (const entry of formData.entries()) {
+          const afterDash = entry[0].substring(entry[0].lastIndexOf("-") + 1);
+          if (parseInt(afterDash)) {
+            const feildName = entry[0].substring(0, entry[0].lastIndexOf("-"));
+            if (!reqJson[feildName]) {
+              reqJson[feildName] = [];
+            }
+            reqJson[feildName].push(entry[1]);
+          } else if (typeof entry[0] === "string") {
+            reqJson[entry[0]] = entry[1];
+          }
+        }
+
+        // group list objects
+
+        console.log(
+          groupArrayFromObject(reqJson, "built-with", ["url", "title"]),
+        );
+
+        console.log(JSON.stringify(reqJson));
+        return;
+        fetch("/api/generate-readme", {
+          method: "POST",
+          headers: new Headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify(reqJson),
+        })
+          .then((resp) => resp.text())
+          .then((data) => {
+            let a = document.createElement("a");
+            const blob = new Blob(["\ufeff", data]);
+            a.href = URL.createObjectURL(blob);
+            a.download = "Readme.md";
+            a.click();
+          })
+          .catch((err) => console.error(err));
+      });
+
+      function addNewLinkInputs(parentId, feildsName) {
+        let feildsIndex = 1;
+        return () => {
+          const parent = document.getElementById(parentId);
+
+          const newTitle = document.createElement("input");
+          newTitle.setAttribute("name", `${feildsName}-title-${feildsIndex}`);
+          newTitle.setAttribute("type", "text");
+          newTitle.setAttribute("class", "input");
+          newTitle.setAttribute("placeholder", "Title");
+
+          const newLink = document.createElement("input");
+          newLink.setAttribute("name", `${feildsName}-url-${feildsIndex}`);
+          newLink.setAttribute("type", "url");
+          newLink.setAttribute("class", "input");
+          newLink.setAttribute("placeholder", "Link");
+
+          parent.appendChild(newTitle);
+          parent.appendChild(newLink);
+          feildsIndex++;
+        };
+      }
+
+      const addNewBuiltWith = addNewLinkInputs("built-with", "built-with");
+      const addNewTechnologiesDocs = addNewLinkInputs(
+        "technologies-docs",
+        "technologies-docs",
+      );
+
+      addBuiltWithButton.addEventListener("click", () => {
+        addNewBuiltWith();
+      });
+
+      addTechnologiesDocsButton.addEventListener("click", () => {
+        addNewTechnologiesDocs();
+      });
+    </script>
   </body>
 </html>
 {{ end }}
