@@ -3,8 +3,8 @@ FROM golang:1.21-alpine as build
 WORKDIR /app
 COPY . .
 
-RUN apk add make npm nodejs
-RUN make
+RUN apk add make npm nodejs && \
+    make
 
 FROM alpine:latest as run
 
