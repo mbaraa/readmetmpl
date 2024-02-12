@@ -97,6 +97,16 @@ Running Markdown</textarea
         "add-technologies-docs-btn",
       );
 
+      class TitleLink {
+        title;
+        href;
+
+        constructor(title, url) {
+          this.title = title;
+          this.href = url;
+        }
+      }
+
       function groupArrayFromObject(object, commonKey, subKeys) {
         const obj = {};
 
@@ -115,18 +125,24 @@ Running Markdown</textarea
           }
         }
 
-        const spreadObjects = [];
-        let i = 0;
-        for (const key in obj) {
-          const o = {};
-          for (const value of obj[key]) {
-            o[key] = obj[key][i];
+        const objKeys = Object.keys(obj);
+        const finalObjects = new Array(objKeys.length);
+        for (const subKey of subKeys) {
+          for (const key in obj) {
+            if (key === subKey) {
+              let i = 0;
+              for (const something of obj[key]) {
+                if (!finalObjects[i]) {
+                  finalObjects[i] = {};
+                }
+                finalObjects[i][subKey] = something; //obj[key][i];
+                i++;
+              }
+            }
           }
-          spreadObjects.push(o);
-          i++;
         }
 
-        return obj;
+        return finalObjects;
       }
 
       document.getElementById("btnn").addEventListener("click", (e) => {
