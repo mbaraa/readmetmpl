@@ -61,6 +61,13 @@
 - [{{ .Title }}]({{ .Link }})
   {{ end }}
 
+We recommend to look at the documentations
+
+{{ range .TechnologiesDocs }}
+
+- [{{ .Title }}]({{ .Link }})
+  {{ end }}
+
 ---
 
 <!-- GETTING STARTED -->

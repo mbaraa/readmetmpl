@@ -8,7 +8,7 @@ import (
 
 type Anchor struct {
 	Title string `json:"title"`
-	Href  string `json:"href"`
+	Link  string `json:"url"`
 }
 
 type ReadmeProps struct {
