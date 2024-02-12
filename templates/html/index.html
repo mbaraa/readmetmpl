@@ -1,212 +1,149 @@
 {{ define "index" }}
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Readmetmpl</title>
-    <meta charset="utf-8" />
-    <!-- <link rel="icon" href="/resources/images/favicon.png" /> -->
-    <meta name="viewport" content="width=device-width" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=yes"
-    />
-    <meta name="description" content="A Readme generator from template" />
-    <meta name="keywords" content="hmm" />
-    {{ template "_imports" }}
 
-    <style>
-      textarea {
-        height: 200px !important;
-      }
-    </style>
-  </head>
+<head>
+  <title>Readmetmpl</title>
+  <meta charset="utf-8" />
+  <!-- <link rel="icon" href="/resources/images/favicon.png" /> -->
+  <meta name="viewport" content="width=device-width" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=yes" />
+  <meta name="description" content="A Readme generator from template" />
+  <meta name="keywords" content="hmm" />
+  {{ template "_imports" }}
 
-  <body style="min-height: 100dvh" class="font-Vistol bg-black">
-    <main class="w-full h-full p-[100px]">
-      <form
-        action="#"
-        id="some-form"
-        class="mb-[10px] grid grid-cols-3 gap-[10px]"
-      >
-        <input class="input" type="text" name="title" placeholder="Title" />
-        <input
-          class="input"
-          type="text"
-          name="brief"
-          placeholder="Brief Description"
-        />
-        <input
-          class="input"
-          type="url"
-          name="docs-url"
-          placeholder="Docs Url"
-        />
-        <input
-          class="input"
-          type="url"
-          name="issues-url"
-          placeholder="Issues Url"
-        />
-        <input
-          class="input"
-          type="url"
-          name="build-badge"
-          placeholder="Build badge target url"
-        />
-        <input
-          class="input"
-          type="url"
-          name="build-status-url"
-          placeholder="Build status url"
-        />
-        <textarea class="input" rows="30" cols="70" name="description">
-Description</textarea
-        >
-        <textarea class="input" rows="30" cols="70" name="prerequisites-md">
-Prerequisites Markdown</textarea
-        >
-        <textarea class="input" rows="30" cols="70" name="installation-md">
-Installation Markdown</textarea
-        >
-        <textarea class="input" rows="30" cols="70" name="running-md">
-Running Markdown</textarea
-        >
-        <!--  -->
-        <div>
-          <label for="built-with">Built With:</label>
-          <div id="built-with">
-            <button class="btn info" id="add-built-with-btn">+</button>
-          </div>
+  <style>
+    textarea {
+      height: 200px !important;
+    }
+  </style>
+</head>
+
+<body style="min-height: 100dvh" class="font-Vistol bg-black">
+  <main class="w-full h-full p-[100px]">
+    <form action="#" id="goForm" class="mb-[10px] grid grid-cols-3 gap-[10px]">
+      <input class="input" type="text" name="title" placeholder="Title" />
+      <input class="input" type="text" name="brief" placeholder="Brief Description" />
+      <input class="input" type="url" name="docsUrl" placeholder="Docs Url" />
+      <input class="input" type="url" name="issuesUrl" placeholder="Issues Url" />
+      <input class="input" type="url" name="buildBadge" placeholder="Build badge target url" />
+      <input class="input" type="url" name="buildStatusUrl" placeholder="Build status url" />
+      <textarea class="input" rows="30" cols="70" name="description">Description</textarea>
+      <textarea class="input" rows="30" cols="70" name="prerequisites">Prerequisites Markdown</textarea>
+      <textarea class="input" rows="30" cols="70" name="installation">Installation Markdown</textarea>
+      <textarea class="input" rows="30" cols="70" name="running">Running Markdown</textarea>
+      <!--  -->
+      <div>
+        <label for="built-with">Built With:</label>
+        <div id="built-with">
+          <button class="btn info" id="add-built-with-btn">+</button>
         </div>
+      </div>
 
-        <div>
-          <label for="technologies-docs">Technologies Used:</label>
-          <div id="technologies-docs">
-            <button class="btn info" id="add-technologies-docs-btn">+</button>
-          </div>
+      <div>
+        <label for="technologies-docs">Technologies Used:</label>
+        <div id="technologies-docs">
+          <button class="btn info" id="add-technologies-docs-btn">+</button>
         </div>
-      </form>
+      </div>
+      <button name="intent" value="save">Save</button>
+    </form>
 
-      <button id="btnn" class="btn info">Hehe hoho I'm a Button</button>
-    </main>
+  </main>
 
-    <script>
-      const form = document.getElementById("some-form");
-      const addBuiltWithButton = document.getElementById("add-built-with-btn");
-      const addTechnologiesDocsButton = document.getElementById(
-        "add-technologies-docs-btn",
-      );
+  <script>
 
-      function groupArrayFromObject(object, commonKey, subKeys) {
-        const obj = {};
+    const form = document.getElementById("goForm");
+    const submitter = document.querySelector("button[value=save]");
 
-        for (const subKey of subKeys) {
-          const values = [];
-          for (const key in object) {
-            if (
-              Array.isArray(object[key]) &&
-              key === commonKey + "-" + subKey
-            ) {
-              for (const objArrVal of object[key]) {
-                values.push(objArrVal);
-              }
-              obj[subKey] = values;
-            }
-          }
-        }
+    function generateLinkInputs(parentId) {
+      let fieldsIndex = 1;
+      return () => {
+        const parent = document.getElementById(parentId);
 
-        const spreadObjects = [];
-        let i = 0;
-        for (const key in obj) {
-          const o = {};
-          for (const value of obj[key]) {
-            o[key] = obj[key][i];
-          }
-          spreadObjects.push(o);
-          i++;
-        }
+        const newTitle = document.createElement("input");
+        newTitle.setAttribute("name", `${parentId}-title-${fieldsIndex}`);
+        newTitle.setAttribute("type", "text");
+        newTitle.setAttribute("class", "input");
+        newTitle.setAttribute("placeholder", "Title");
 
-        return obj;
+        const newLink = document.createElement("input");
+        newLink.setAttribute("name", `${parentId}-url-${fieldsIndex}`);
+        newLink.setAttribute("type", "url");
+        newLink.setAttribute("class", "input");
+        newLink.setAttribute("placeholder", "Link");
+
+        parent.appendChild(newTitle);
+        parent.appendChild(newLink);
+        fieldsIndex++;
+      };
+    }
+
+    const addNewBuiltWith = generateLinkInputs("built-with");
+    const addNewTechnologiesDocs = generateLinkInputs("technologies-docs");
+
+    document.getElementById("add-built-with-btn").addEventListener("click", () => {
+      addNewBuiltWith();
+    });
+
+    document.getElementById("add-technologies-docs-btn").addEventListener("click", () => {
+      addNewTechnologiesDocs();
+    });
+
+    document.getElementById("goForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = await new FormData(form, submitter);
+      const formDataObject = new GoForm(form, formData);
+
+      console.log(formDataObject);
+
+    })
+
+    class GoForm {
+      constructor(data, formData) {
+        this.title = data.title.value;
+        this.brief = data.brief.value;
+        this.docsUrl = data.docsUrl.value;
+        this.issuesUrl = data.issuesUrl.value;
+        this.buildBadge = data.buildBadge.value;
+        this.buildStatusUrl = data.buildStatusUrl.value;
+        this.description = data.description.value;
+        this.prerequisites = data.prerequisites.value;
+        this.installation = data.installation.value;
+        this.running = data.running.value;
+        this.builtWith = this.getArrayData(formData, 'built-with');
+        this.technologies = this.getArrayData(formData, 'technologies-docs');
       }
 
-      document.getElementById("btnn").addEventListener("click", (e) => {
-        // juice form data into json
-        const formData = new FormData(form);
-        const reqJson = {};
-        for (const entry of formData.entries()) {
-          const afterDash = entry[0].substring(entry[0].lastIndexOf("-") + 1);
-          if (parseInt(afterDash)) {
-            const feildName = entry[0].substring(0, entry[0].lastIndexOf("-"));
-            if (!reqJson[feildName]) {
-              reqJson[feildName] = [];
-            }
-            reqJson[feildName].push(entry[1]);
-          } else if (typeof entry[0] === "string") {
-            reqJson[entry[0]] = entry[1];
+      getArrayData(formData, regexString) {
+        const tempArray = [];
+        const tempObj = { title: '', url: '' }
+        for (const [key, value] of formData) {
+          const title = regexString + '-title';
+          const url = regexString + '-url';
+
+
+          if (key.match(new RegExp(title))) {
+            tempObj.title = value;
+          }
+
+          if (key.match(new RegExp(title))) {
+            tempObj.url = value;
+          }
+
+          if (tempObj.title !== '' && tempObj.url !== '') {
+            tempArray.push(Object.assign({}, tempObj))
+            tempObj.title = '';
+            tempObj.url = '';
+          } else {
+            continue;
           }
         }
-
-        // group list objects
-
-        console.log(
-          groupArrayFromObject(reqJson, "built-with", ["url", "title"]),
-        );
-
-        console.log(JSON.stringify(reqJson));
-        return;
-        fetch("/api/generate-readme", {
-          method: "POST",
-          headers: new Headers({ "Content-Type": "application/json" }),
-          body: JSON.stringify(reqJson),
-        })
-          .then((resp) => resp.text())
-          .then((data) => {
-            let a = document.createElement("a");
-            const blob = new Blob(["\ufeff", data]);
-            a.href = URL.createObjectURL(blob);
-            a.download = "Readme.md";
-            a.click();
-          })
-          .catch((err) => console.error(err));
-      });
-
-      function addNewLinkInputs(parentId, feildsName) {
-        let feildsIndex = 1;
-        return () => {
-          const parent = document.getElementById(parentId);
-
-          const newTitle = document.createElement("input");
-          newTitle.setAttribute("name", `${feildsName}-title-${feildsIndex}`);
-          newTitle.setAttribute("type", "text");
-          newTitle.setAttribute("class", "input");
-          newTitle.setAttribute("placeholder", "Title");
-
-          const newLink = document.createElement("input");
-          newLink.setAttribute("name", `${feildsName}-url-${feildsIndex}`);
-          newLink.setAttribute("type", "url");
-          newLink.setAttribute("class", "input");
-          newLink.setAttribute("placeholder", "Link");
-
-          parent.appendChild(newTitle);
-          parent.appendChild(newLink);
-          feildsIndex++;
-        };
+        return tempArray;
       }
+    }
+  </script>
+</body>
 
-      const addNewBuiltWith = addNewLinkInputs("built-with", "built-with");
-      const addNewTechnologiesDocs = addNewLinkInputs(
-        "technologies-docs",
-        "technologies-docs",
-      );
-
-      addBuiltWithButton.addEventListener("click", () => {
-        addNewBuiltWith();
-      });
-
-      addTechnologiesDocsButton.addEventListener("click", () => {
-        addNewTechnologiesDocs();
-      });
-    </script>
-  </body>
 </html>
 {{ end }}
