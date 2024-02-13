@@ -14,16 +14,16 @@ type Anchor struct {
 type ReadmeProps struct {
 	Title            string   `json:"title"`
 	BriefDescription string   `json:"brief"`
-	DocsUrl          string   `json:"docs-url"`
-	IssuesUrl        string   `json:"issues-url"`
-	BuildBadge       string   `json:"build-badge"`
-	BuildStatusUrl   string   `json:"build-status-url"`
+	DocsUrl          string   `json:"docsUrl"`
+	IssuesUrl        string   `json:"issuesUrl"`
+	BuildBadge       string   `json:"buildBadge"`
+	BuildStatusUrl   string   `json:"buildStatusUrl"`
 	Description      string   `json:"description"`
-	BuiltWith        []Anchor `json:"built-with"`
-	TechnologiesDocs []Anchor `json:"technologies-docs"`
-	PrerequisitesMd  string   `json:"prerequisites-md"`
-	InstallationMd   string   `json:"installation-md"`
-	RunningMd        string   `json:"running-md"`
+	BuiltWith        []Anchor `json:"builtWith"`
+	TechnologiesDocs []Anchor `json:"technologiesDocs"`
+	PrerequisitesMd  string   `json:"prerequisites"`
+	InstallationMd   string   `json:"installation"`
+	RunningMd        string   `json:"running"`
 }
 
 type readmeTemplate struct{}
