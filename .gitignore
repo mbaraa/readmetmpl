@@ -13,3 +13,4 @@ _*/
 *.out
 resources/css/tailwind.css
 tailwindcss/node_modules/
+readmetmpl
