@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"readmetmpl/log"
@@ -36,6 +37,7 @@ func handleGenerateReadme(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	fmt.Printf("%+v\n", reqBody)
 
 	w.Header().Set("Content-Type", "text/plain")
 	readme := templates.NewReadme().Render(reqBody)
