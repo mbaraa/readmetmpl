@@ -15,4 +15,4 @@ COPY --from=build /app/resources ./resources
 
 EXPOSE 8081
 
-CMD ["./run"]
+CMD ["./run", "-port", "8081"]
